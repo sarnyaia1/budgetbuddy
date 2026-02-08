@@ -32,7 +32,15 @@ export default function ForgotPasswordPage() {
     const result = await forgotPasswordAction(data)
 
     if (result?.error) {
-      setError(result.error)
+      // Better error handling for rate limits
+      if (result.error.toLowerCase().includes('rate limit')) {
+        setError(
+          'Túl sok email kérés. A Supabase ingyenes tier napi 3 emailt enged. ' +
+          'Próbáld újra később, vagy kérj segítséget az adminisztrátortól.'
+        )
+      } else {
+        setError(result.error)
+      }
       setIsLoading(false)
     } else if (result?.success) {
       setSuccess(true)

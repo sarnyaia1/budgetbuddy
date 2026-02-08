@@ -32,7 +32,15 @@ export default function RegisterPage() {
     const result = await registerAction(data)
 
     if (result?.error) {
-      setError(result.error)
+      // Better error handling for rate limits
+      if (result.error.toLowerCase().includes('rate limit')) {
+        setError(
+          'Túl sok email kérés. A Supabase ingyenes tier napi 3 emailt enged. ' +
+          'Próbáld újra holnap, vagy kérd meg az adminisztrátort, hogy erősítse meg manuálisan a fiókod.'
+        )
+      } else {
+        setError(result.error)
+      }
       setIsLoading(false)
     } else if (result?.success) {
       setSuccess(true)
