@@ -5,8 +5,8 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "18"
-  NPM_VERSION = "9"
+  NODE_VERSION = "20.20.0"
+  NPM_VERSION = "10"
 
 # Redirects for client-side routing
 [[redirects]]
