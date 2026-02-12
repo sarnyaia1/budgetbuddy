@@ -1,4 +1,4 @@
-# Netlify configuration for Next.js 15 deployment
+# Netlify configuration for Next.js deployment
 
 [build]
   command = "npm run build"
@@ -7,12 +7,6 @@
 [build.environment]
   NODE_VERSION = "20.20.0"
   NPM_VERSION = "10"
-
-# Redirects for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 # Security headers
 [[headers]]
@@ -23,12 +17,6 @@
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-
-# Cache static assets
-[[headers]]
-  for = "/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
 
 # Cache Next.js build assets
 [[headers]]
@@ -41,16 +29,8 @@
   NODE_ENV = "production"
 
 [context.deploy-preview.environment]
-  NODE_ENV = "development"
+  NODE_ENV = "production"
 
-[context.branch-deploy.environment]
-  NODE_ENV = "development"
-
-# Functions configuration (for future serverless functions)
-[functions]
-  directory = "netlify/functions"
-  node_bundler = "esbuild"
-
-# Plugin configuration (optional - for Next.js runtime)
+# Next.js runtime plugin
 [[plugins]]
   package = "@netlify/plugin-nextjs"

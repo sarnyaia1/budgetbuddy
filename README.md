@@ -1,10 +1,11 @@
-# 💰 HaviKiadas - Budget Tracking Application
+# 💰 ForintFigyelő - Személyes Költségkövető
 
-Modern költségkövető alkalmazás Next.js 15 és Supabase technológiával.
+Modern költségkövető alkalmazás Next.js 16 és Supabase technológiával. Magyar nyelvű, HUF alapú.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green)](https://supabase.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/deploy-status/deploy-status)](https://app.netlify.com/)
 
 ---
 
@@ -80,8 +81,8 @@ Modern költségkövető alkalmazás Next.js 15 és Supabase technológiával.
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/sarnyaia1/budgetbuddy.git
-cd budgetbuddy
+git clone https://github.com/sarnyaia1/forintfigyelo.git
+cd forintfigyelo
 ```
 
 2. **Install dependencies:**
@@ -233,7 +234,7 @@ npm run lint
 ### Project Structure
 
 ```
-havikiadas/
+forintfigyelo/
 ├── app/
 │   ├── (auth)/                    # Authentication pages
 │   │   ├── login/
@@ -294,63 +295,25 @@ havikiadas/
 
 ---
 
-## 🚀 Deployment to Netlify
+## 🚀 Deployment (Netlify)
 
-### Prerequisites
+### Lépések
 
-- GitHub repository (already setup: `sarnyaia1/budgetbuddy`)
-- Netlify account
+1. **Netlify-on új site létrehozása:**
+   - [Netlify](https://app.netlify.com) -> **"Add new site"** -> **"Import an existing project"**
+   - GitHub -> `sarnyaia1/forintfigyelo`
 
-### Deployment Steps
+2. **Build beállítások** (automatikusan felismeri a `netlify.toml`-ból):
+   - Build command: `npm run build`
+   - Plugin: `@netlify/plugin-nextjs`
 
-1. **Create `netlify.toml` configuration:**
+3. **Környezeti változók** (**Site settings** -> **Environment variables**):
+   - `NEXT_PUBLIC_SUPABASE_URL` - Supabase projekt URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anon/public key
 
-Already included in the project (see below).
+4. **Deploy** - Kattints a "Deploy site" gombra.
 
-2. **Push code to GitHub:**
-
-```bash
-git add .
-git commit -m "feat: Ready for deployment"
-git push origin master
-```
-
-3. **Connect to Netlify:**
-
-- Go to [Netlify](https://app.netlify.com)
-- Click **"Add new site"** → **"Import an existing project"**
-- Choose **GitHub** and select `sarnyaia1/budgetbuddy`
-
-4. **Configure build settings:**
-
-Netlify should auto-detect from `netlify.toml`, but verify:
-
-```
-Build command: npm run build
-Publish directory: .next
-```
-
-5. **Add environment variables:**
-
-Go to **Site settings** → **Environment variables** and add:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-Optional (for future AI features):
-```env
-ANTHROPIC_API_KEY=your_anthropic_api_key
-```
-
-6. **Deploy:**
-
-Click **"Deploy site"** and wait for the build to complete.
-
-7. **Custom domain (optional):**
-
-Go to **Site settings** → **Domain management** → **Add custom domain**
+5. **Custom domain** (opcionális): **Site settings** -> **Domain management**
 
 ---
 
@@ -467,7 +430,7 @@ All database tables have RLS policies that ensure:
 
 | Category | Technology |
 |----------|-----------|
-| **Framework** | Next.js 15 (App Router) |
+| **Framework** | Next.js 16 (App Router) |
 | **Database** | Supabase (PostgreSQL) |
 | **Authentication** | Supabase Auth |
 | **Styling** | Tailwind CSS |
@@ -476,7 +439,7 @@ All database tables have RLS policies that ensure:
 | **Notifications** | sonner (toast) |
 | **Icons** | Lucide React |
 | **Date Handling** | date-fns |
-| **Language** | TypeScript 5.3 |
+| **Language** | TypeScript 5.9 |
 | **Deployment** | Netlify |
 
 ---
@@ -551,7 +514,7 @@ This is a personal project, but suggestions are welcome!
 ## 📞 Support
 
 For issues or questions:
-- GitHub Issues: [github.com/sarnyaia1/budgetbuddy/issues](https://github.com/sarnyaia1/budgetbuddy/issues)
+- GitHub Issues: [github.com/sarnyaia1/forintfigyelo/issues](https://github.com/sarnyaia1/forintfigyelo/issues)
 - Create a new issue with detailed description
 
 ---
@@ -596,6 +559,6 @@ MIT License - feel free to use this project for personal or commercial purposes.
 
 ---
 
-**Last Updated**: 2026.02.08
+**Last Updated**: 2026.02.12
 **Current Version**: Phase 4 (Budget Planning System)
-**Repository**: [github.com/sarnyaia1/budgetbuddy](https://github.com/sarnyaia1/budgetbuddy)
+**Repository**: [github.com/sarnyaia1/forintfigyelo](https://github.com/sarnyaia1/forintfigyelo)
