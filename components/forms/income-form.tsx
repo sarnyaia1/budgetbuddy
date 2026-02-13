@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
+import { Loader2 } from 'lucide-react'
 import { incomeSchema, type IncomeInput, INCOME_SOURCE_TYPES } from '@/lib/validations/income'
 import { createIncome, updateIncome } from '@/app/actions/income'
 import { Button } from '@/components/ui/button'
@@ -21,12 +23,14 @@ import { toast } from 'sonner'
 
 interface IncomeFormProps {
   monthId: string
-  income?: Income // If provided, we're in edit mode
+  income?: Income
   onSuccess?: () => void
 }
 
 export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const today = format(new Date(), 'yyyy-MM-dd')
 
   const {
     register,
@@ -36,6 +40,7 @@ export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
     setValue,
   } = useForm<IncomeInput>({
     resolver: zodResolver(incomeSchema),
+    mode: 'onBlur',
     defaultValues: income
       ? {
           date: income.date,
@@ -45,8 +50,8 @@ export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
           notes: income.notes || '',
         }
       : {
-          date: format(new Date(), 'yyyy-MM-dd'),
-          amount: undefined as any, // Will be filled by user
+          date: today,
+          amount: undefined as any,
           source_type: 'Fizetés',
           custom_source: '',
           notes: '',
@@ -74,11 +79,10 @@ export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
             : 'Az új bevétel sikeresen hozzáadva.',
         })
 
-        // Refresh the page to show new data
         if (onSuccess) {
           onSuccess()
         } else {
-          window.location.reload()
+          router.refresh()
         }
       }
     } catch (error) {
@@ -97,6 +101,7 @@ export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
         <Input
           id="date"
           type="date"
+          max={today}
           {...register('date')}
           className={errors.date ? 'border-red-500' : ''}
           disabled={isLoading}
@@ -112,6 +117,7 @@ export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
           id="amount"
           type="number"
           step="0.01"
+          placeholder="pl. 250000"
           {...register('amount', { valueAsNumber: true })}
           className={errors.amount ? 'border-red-500' : ''}
           disabled={isLoading}
@@ -147,7 +153,7 @@ export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
       </div>
 
       {sourceType === 'Egyéb' && (
-        <div className="space-y-2">
+        <div className="space-y-2 bg-blue-50 dark:bg-blue-900/10 p-3 rounded-md">
           <Label htmlFor="custom_source">Forrás neve</Label>
           <Input
             id="custom_source"
@@ -180,13 +186,8 @@ export function IncomeForm({ monthId, income, onSuccess }: IncomeFormProps) {
 
       <div className="flex gap-2 pt-4">
         <Button type="submit" className="flex-1" disabled={isLoading}>
-          {isLoading
-            ? income
-              ? 'Frissítés...'
-              : 'Hozzáadás...'
-            : income
-            ? 'Frissítés'
-            : 'Hozzáadás'}
+          {isLoading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+          {income ? 'Frissítés' : 'Hozzáadás'}
         </Button>
       </div>
     </form>

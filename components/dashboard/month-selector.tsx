@@ -52,7 +52,7 @@ export function MonthSelector({ months, currentMonth }: MonthSelectorProps) {
 
   return (
     <Select value={currentMonth} onValueChange={handleMonthChange}>
-      <SelectTrigger className="w-[200px]">
+      <SelectTrigger className="w-full sm:w-[200px]">
         <SelectValue placeholder="Válassz hónapot" />
       </SelectTrigger>
       <SelectContent>

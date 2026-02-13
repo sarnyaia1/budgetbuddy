@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { Loader2, Eye, EyeOff } from 'lucide-react'
 import { loginSchema, type LoginInput } from '@/lib/validations/auth'
 import { loginAction } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
@@ -13,9 +14,21 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  )
+}
+
+function LoginForm() {
   const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo')
+  const callbackError = searchParams.get('error')
+  const [error, setError] = useState<string | null>(callbackError)
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     register,
@@ -23,13 +36,14 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
+    mode: 'onBlur',
   })
 
   const onSubmit = async (data: LoginInput) => {
     setIsLoading(true)
     setError(null)
 
-    const result = await loginAction(data)
+    const result = await loginAction(data, redirectTo || undefined)
 
     if (result?.error) {
       setError(result.error)
@@ -55,7 +69,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3" role="alert" aria-live="polite">
                 <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
               </div>
             )}
@@ -66,6 +80,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 placeholder="pelda@email.com"
+                autoComplete="email"
                 {...register('email')}
                 className={errors.email ? 'border-red-500' : ''}
                 disabled={isLoading}
@@ -85,14 +100,26 @@ export default function LoginPage() {
                   Elfelejtetted?
                 </Link>
               </div>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register('password')}
-                className={errors.password ? 'border-red-500' : ''}
-                disabled={isLoading}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  {...register('password')}
+                  className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Jelszó elrejtése' : 'Jelszó megjelenítése'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password.message}</p>
               )}
@@ -104,7 +131,7 @@ export default function LoginPage() {
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
               disabled={isLoading}
             >
-              {isLoading ? 'Bejelentkezés...' : 'Bejelentkezés'}
+              {isLoading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Bejelentkezés...</> : 'Bejelentkezés'}
             </Button>
 
             <p className="text-sm text-center text-gray-600 dark:text-gray-400">

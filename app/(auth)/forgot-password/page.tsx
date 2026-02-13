@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { Loader2 } from 'lucide-react'
 import { forgotPasswordSchema, type ForgotPasswordInput } from '@/lib/validations/auth'
 import { forgotPasswordAction } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
@@ -22,6 +23,7 @@ export default function ForgotPasswordPage() {
     formState: { errors },
   } = useForm<ForgotPasswordInput>({
     resolver: zodResolver(forgotPasswordSchema),
+    mode: 'onBlur',
   })
 
   const onSubmit = async (data: ForgotPasswordInput) => {
@@ -78,11 +80,12 @@ export default function ForgotPasswordPage() {
           <CardContent className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-800 dark:text-blue-300">
-                📧 Elküldtünk egy jelszó-visszaállító linket az email címedre.
+                Elküldtünk egy jelszó-visszaállító linket az email címedre.
                 Kattints a linkre a jelszavad megváltoztatásához.
               </p>
               <p className="text-sm text-blue-700 dark:text-blue-400 mt-2">
-                Ha nem találod az emailt, nézd meg a spam mappát is.
+                Ha nem találod az emailt, nézd meg a spam/levélszemét mappát is.
+                Az email megérkezése néhány percet is igénybe vehet.
               </p>
             </div>
           </CardContent>
@@ -127,7 +130,7 @@ export default function ForgotPasswordPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3" role="alert" aria-live="polite">
                 <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
               </div>
             )}
@@ -138,6 +141,7 @@ export default function ForgotPasswordPage() {
                 id="email"
                 type="email"
                 placeholder="pelda@email.com"
+                autoComplete="email"
                 {...register('email')}
                 className={errors.email ? 'border-red-500' : ''}
                 disabled={isLoading}
@@ -153,12 +157,12 @@ export default function ForgotPasswordPage() {
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
               disabled={isLoading}
             >
-              {isLoading ? 'Küldés...' : 'Jelszó-visszaállító link küldése'}
+              {isLoading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Küldés...</> : 'Jelszó-visszaállító link küldése'}
             </Button>
 
             <Link href="/login" className="w-full">
               <Button type="button" variant="ghost" className="w-full">
-                ← Vissza a bejelentkezéshez
+                Vissza a bejelentkezéshez
               </Button>
             </Link>
           </CardFooter>

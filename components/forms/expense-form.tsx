@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
+import { Loader2 } from 'lucide-react'
 import { expenseSchema, type ExpenseInput, EXPENSE_CATEGORIES } from '@/lib/validations/expense'
 import { createExpense, updateExpense } from '@/app/actions/expenses'
 import { Button } from '@/components/ui/button'
@@ -19,14 +21,27 @@ import {
 import type { Expense } from '@/lib/types/database'
 import { toast } from 'sonner'
 
+const categoryPlaceholders: Record<string, string> = {
+  'Bevásárlás': 'pl. Lidl, Spar, Tesco',
+  'Szórakozás': 'pl. Mozi, Koncert, Netflix',
+  'Vendéglátás': 'pl. Pizzéria, Kávézó',
+  'Extra': 'pl. Ajándék, Különleges kiadás',
+  'Utazás': 'pl. Vonatjegy, Benzin',
+  'Kötelező kiadás': 'pl. Rezsi, Biztosítás',
+  'Ruha': 'pl. Cipő, Kabát',
+  'Sport': 'pl. Edzőterem, Úszójegy',
+}
+
 interface ExpenseFormProps {
   monthId: string
-  expense?: Expense // If provided, we're in edit mode
+  expense?: Expense
   onSuccess?: () => void
 }
 
 export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const today = format(new Date(), 'yyyy-MM-dd')
 
   const {
     register,
@@ -36,6 +51,7 @@ export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
     setValue,
   } = useForm<ExpenseInput>({
     resolver: zodResolver(expenseSchema),
+    mode: 'onBlur',
     defaultValues: expense
       ? {
           date: expense.date,
@@ -45,8 +61,8 @@ export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
           notes: expense.notes || '',
         }
       : {
-          date: format(new Date(), 'yyyy-MM-dd'),
-          amount: undefined as any, // Will be filled by user
+          date: today,
+          amount: undefined as any,
           item_name: '',
           category: 'Bevásárlás',
           notes: '',
@@ -74,11 +90,10 @@ export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
             : 'Az új kiadás sikeresen hozzáadva.',
         })
 
-        // Refresh the page to show new data
         if (onSuccess) {
           onSuccess()
         } else {
-          window.location.reload()
+          router.refresh()
         }
       }
     } catch (error) {
@@ -97,6 +112,7 @@ export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
         <Input
           id="date"
           type="date"
+          max={today}
           {...register('date')}
           className={errors.date ? 'border-red-500' : ''}
           disabled={isLoading}
@@ -111,7 +127,7 @@ export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
         <Input
           id="item_name"
           type="text"
-          placeholder="pl. Élelmiszerbolt"
+          placeholder={categoryPlaceholders[category] || 'pl. Élelmiszerbolt'}
           {...register('item_name')}
           className={errors.item_name ? 'border-red-500' : ''}
           disabled={isLoading}
@@ -127,6 +143,7 @@ export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
           id="amount"
           type="number"
           step="0.01"
+          placeholder="pl. 5000"
           {...register('amount', { valueAsNumber: true })}
           className={errors.amount ? 'border-red-500' : ''}
           disabled={isLoading}
@@ -178,13 +195,8 @@ export function ExpenseForm({ monthId, expense, onSuccess }: ExpenseFormProps) {
 
       <div className="flex gap-2 pt-4">
         <Button type="submit" className="flex-1" disabled={isLoading}>
-          {isLoading
-            ? expense
-              ? 'Frissítés...'
-              : 'Hozzáadás...'
-            : expense
-            ? 'Frissítés'
-            : 'Hozzáadás'}
+          {isLoading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+          {expense ? 'Frissítés' : 'Hozzáadás'}
         </Button>
       </div>
     </form>

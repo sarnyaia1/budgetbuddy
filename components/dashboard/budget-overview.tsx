@@ -139,7 +139,7 @@ export function BudgetOverview({ budgets, monthId }: BudgetOverviewProps) {
       </Card>
 
       {/* Category Breakdown */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {budgets.map((budget) => (
           <Card key={budget.id} className={budget.isOverBudget ? 'border-red-300 dark:border-red-700' : ''}>
             <CardHeader className="pb-3">

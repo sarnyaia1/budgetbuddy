@@ -131,17 +131,49 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 dark:border-gray-800 py-8">
+      <footer className="border-t border-gray-200 dark:border-gray-800 py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
-                <span className="text-sm font-bold text-white">H</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-bold text-white">H</span>
+                </div>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">ForintFigyelő</span>
               </div>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">HaviKiadas</span>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Havi költségkezelő alkalmazás - egyszerűen, magyarul.
+              </p>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Havi költségkezelő alkalmazás - egyszerűen, magyarul.
+            <div>
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Navigáció</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/login" className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                    Bejelentkezés
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/register" className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                    Regisztráció
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Információ</h4>
+              <ul className="space-y-2">
+                <li>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    Adataid biztonságban vannak - Supabase RLS védelemmel.
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-6 text-center">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
+              &copy; {new Date().getFullYear()} ForintFigyelő. Minden jog fenntartva.
             </p>
           </div>
         </div>

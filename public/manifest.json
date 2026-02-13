@@ -1,0 +1,40 @@
+{
+  "name": "ForintFigyelő - Havi Költségkezelő",
+  "short_name": "ForintFigyelő",
+  "description": "Kövesd nyomon a havi bevételeidet és kiadásaidat, tervezz költségkeretet, és hozz tudatos pénzügyi döntéseket.",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "lang": "hu",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Új bevétel",
+      "short_name": "Bevétel",
+      "url": "/dashboard?action=new-income",
+      "icons": []
+    },
+    {
+      "name": "Új kiadás",
+      "short_name": "Kiadás",
+      "url": "/dashboard?action=new-expense",
+      "icons": []
+    }
+  ]
+}
